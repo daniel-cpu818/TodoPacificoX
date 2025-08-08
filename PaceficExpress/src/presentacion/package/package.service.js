@@ -1,17 +1,7 @@
 import { AppDataSource } from "../../config/data-source.js";
 
-
 const packageRepository = AppDataSource.getRepository("Package");
 const userRepository = AppDataSource.getRepository("User");
-
-export const createPackageService = async ({ trackingNumber }) => {
-  const existing = await packageRepository.findOne({ where: { trackingNumber } });
-  if (existing) throw new Error("Número de guía ya registrado");
-
-  const newPackage = packageRepository.create({ trackingNumber });
-  await packageRepository.save(newPackage);
-  return newPackage;
-};
 
 export const getAllPackagesService = async () => {
   return await packageRepository.find({ relations: ["assignedTo"] });

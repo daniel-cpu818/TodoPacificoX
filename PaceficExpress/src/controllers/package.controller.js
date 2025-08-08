@@ -1,10 +1,10 @@
 import {
-  createPackageService,
   getAllPackagesService,
   updatePackageStatusService,
   assignPackageToSelfService,
   getMyPackagesService
 } from "../presentacion/package/package.service.js";
+import { createPackageService } from "../presentacion/package/service/package-service.create.js";
 
 export const createPackage = async (req, res) => {
   try {

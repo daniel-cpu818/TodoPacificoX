@@ -19,14 +19,14 @@ const router = Router();
 router.post("/register", register);
 router.post("/login", login);
 
-// ---------------- Paquetes ----------------
-router.post("/packages", authMiddleware, createPackage);
-router.get("/packages", authMiddleware, getAllPackages);
-router.put("/packages/:id/status", authMiddleware, updatePackageStatus);
+// // ---------------- Paquetes ----------------
+// router.post("/packages", authMiddleware, createPackage);
+// router.get("/packages", authMiddleware, getAllPackages);
+// router.put("/packages/:id/status", authMiddleware, updatePackageStatus);
 
-// ---------------- Asignación e historial ----------------
-router.post("/assign", authMiddleware, assignPackageToSelf);
-router.get("/my-packages", authMiddleware, getMyPackages);
+// // ---------------- Asignación e historial ----------------
+// router.post("/assign", authMiddleware, assignPackageToSelf);
+// router.get("/my-packages", authMiddleware, getMyPackages);
 
 
 // router.post("/assign", authMiddleware, checkRole(["mensajero"]), assignPackageToSelf);

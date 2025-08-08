@@ -11,8 +11,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/packages", packageRoutes);
+app.use("/api", authRoutes);
+app.use("/api", packageRoutes);
 
 AppDataSource.initialize().then(() => {
   console.log("📦 Base de datos conectada");

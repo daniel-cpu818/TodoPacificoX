@@ -1,3 +1,4 @@
+// src/entity/Package.js
 import { EntitySchema } from "typeorm";
 
 export default new EntitySchema({
@@ -6,27 +7,24 @@ export default new EntitySchema({
   columns: {
     id: {
       primary: true,
-      type: "uuid",
-      generated: "uuid"
+      type: "int",
+      generated: true
     },
     trackingNumber: {
       type: "varchar",
       unique: true
     },
-    description: {
-      type: "varchar"
+    sender: {
+      type: "json", // Guarda el objeto completo
+      nullable: false
+    },
+    recipient: {
+      type: "json", // Guarda el objeto completo
+      nullable: false
     },
     status: {
       type: "varchar",
       default: "pendiente"
-    }
-  },
-  relations: {
-    assignedTo: {
-      type: "many-to-one",
-      target: "User",
-      joinColumn: true,
-      nullable: true
     }
   }
 });
