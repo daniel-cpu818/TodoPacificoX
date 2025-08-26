@@ -1,34 +1,44 @@
-import { EntitySchema } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from "typeorm";
+import { Package } from "./package.entity.js";
 
-export default new EntitySchema({
-  name: "User",
-  tableName: "users",
-  columns: {
-    id: {
-      primary: true,
-      type: "uuid",
-      generated: "uuid"
-    },
-    name: {
-      type: "varchar"
-    },
-    email: {
-      type: "varchar",
-      unique: true
-    },
-    password: {
-      type: "varchar"
-    },
-    role: {
-      type: "varchar",
-      default: "mensajero"
-    }
-  },
-  relations: {
-    packages: {
-      type: "one-to-many",
-      target: "Package",
-      inverseSide: "assignedTo"
-    }
-  }
-});
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn("uuid")
+  id;
+
+  @Column({ unique: true })
+  email;
+
+  @Column()
+  password;
+
+  @Column()
+  name;
+
+  @Column({
+    type: "enum",
+    enum: ["admin", "messenger"],
+    default: "messenger",
+  })
+  role;
+
+  @Column({ default: true })
+  isActive;
+
+  @CreateDateColumn()
+  createdAt;
+
+  @UpdateDateColumn()
+  updatedAt;
+
+  // Relación: un mensajero puede tener muchos paquetes asignados
+  @OneToMany(() => Package, (pkg) => pkg.messenger)
+  packages;
+}

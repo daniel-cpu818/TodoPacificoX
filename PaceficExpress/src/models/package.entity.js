@@ -1,30 +1,47 @@
-// src/entity/Package.js
-import { EntitySchema } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { User } from "./user.entity.js";
 
-export default new EntitySchema({
-  name: "Package",
-  tableName: "packages",
-  columns: {
-    id: {
-      primary: true,
-      type: "int",
-      generated: true
-    },
-    trackingNumber: {
-      type: "varchar",
-      unique: true
-    },
-    sender: {
-      type: "json", // Guarda el objeto completo
-      nullable: false
-    },
-    recipient: {
-      type: "json", // Guarda el objeto completo
-      nullable: false
-    },
-    status: {
-      type: "varchar",
-      default: "pendiente"
-    }
-  }
-});
+@Entity()
+export class Package {
+  @PrimaryGeneratedColumn("uuid")
+  id;
+
+  @Column()
+  trackingNumber;
+
+  @Column()
+  senderName;
+
+  @Column()
+  senderAddress;
+
+  @Column()
+  recipientName;
+
+  @Column()
+  recipientAddress;
+
+  @Column({
+    type: "enum",
+    enum: ["pending", "in_transit", "delivered", "cancelled"],
+    default: "pending",
+  })
+  status;
+
+  // Relación: un paquete tiene un mensajero asignado (opcional)
+  @ManyToOne(() => User, (user) => user.packages, { nullable: true })
+  messenger;
+
+  @CreateDateColumn()
+  createdAt;
+
+  @UpdateDateColumn()
+  updatedAt;
+}

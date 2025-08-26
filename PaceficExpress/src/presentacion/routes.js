@@ -2,16 +2,16 @@ import { Router } from "express";
 
 // Controladores
 import { register, login } from "../controllers/auth.controller.js";
-import {
-  createPackage,
-  getAllPackages,
-  updatePackageStatus,
-  assignPackageToSelf,
-  getMyPackages
-} from "../controllers/package.controller.js";
+// import {
+//   createPackage,
+//   getAllPackages,
+//   updatePackageStatus,
+//   assignPackageToSelf,
+//   getMyPackages
+// } from "../controllers/package.controller.js";
 
-// Middleware
-import { authMiddleware } from "../middlewares/auth.middleware.js";
+// // Middleware
+// import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
