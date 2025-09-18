@@ -1,10 +1,11 @@
 // src/services/package/completeDelivery.service.js
-import { AppDataSource } from "../../config/data-source.js";
+import { AppDataSource } from "../../../config/data-source.js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { env } from "../../../config/envs.js";
 import crypto from "crypto";
 import multer from "multer";
-import { Package } from "../../models/Package.js";
-import { User } from "../../models/User.js";
+import { Package } from "../../../models/package.entity.js";
+import { User } from "../../../models/user.entity.js";
 
 const packageRepository = AppDataSource.getRepository(Package);
 const userRepository = AppDataSource.getRepository(User);

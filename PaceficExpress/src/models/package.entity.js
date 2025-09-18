@@ -1,47 +1,48 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from "typeorm";
-import { User } from "./user.entity.js";
-
-@Entity()
-export class Package {
-  @PrimaryGeneratedColumn("uuid")
-  id;
-
-  @Column()
-  trackingNumber;
-
-  @Column()
-  senderName;
-
-  @Column()
-  senderAddress;
-
-  @Column()
-  recipientName;
-
-  @Column()
-  recipientAddress;
-
-  @Column({
-    type: "enum",
-    enum: ["pending", "in_transit", "delivered", "cancelled"],
-    default: "pending",
-  })
-  status;
-
-  // Relación: un paquete tiene un mensajero asignado (opcional)
-  @ManyToOne(() => User, (user) => user.packages, { nullable: true })
-  messenger;
-
-  @CreateDateColumn()
-  createdAt;
-
-  @UpdateDateColumn()
-  updatedAt;
-}
+import e from "express";
+import { EntitySchema } from "typeorm";
+export const Package = new EntitySchema({
+  name: "Package",
+  tableName: "packages",
+  columns: {
+    id: {
+      type: "uuid",
+      primary: true,
+      generated: "uuid",
+    },
+    trackingNumber: {
+      type: "varchar",
+      unique: true,
+      nullable: false,
+    },
+    status: {
+      type: "enum",
+      enum: ["pendiente", "asignado", "en_camino", "entregado"],
+      default: "pendiente",
+    },
+    proofImage1: {
+      type: "varchar",
+      nullable: true,
+    },
+    proofImage2: {
+      type: "varchar",
+      nullable: true,
+    },
+    createdAt: {
+      type: "timestamp",
+      createDate: true,
+    },
+    updatedAt: {
+      type: "timestamp",
+      updateDate: true,
+    },
+  },
+  relations: {
+    messenger: {
+      type: "many-to-one",
+      target: "User",
+      joinColumn: true,
+      nullable: true,
+    },
+  },
+});
+export default Package;

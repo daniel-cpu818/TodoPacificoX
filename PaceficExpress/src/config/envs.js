@@ -17,4 +17,10 @@ export const env = {
   // JWT
   JWT_SECRET: get("JWT_SECRET").required().asString(),
   JWT_EXPIRATION: get("JWT_EXPIRATION").default("1h").asString(),
+
+  // AWS S3
+  AWS_ACCESS_KEY: get("AWS_ACCESS_KEY").required().asString(),
+  AWS_SECRET_KEY: get("AWS_SECRET_KEY").required().asString(),
+  AWS_REGION: get("AWS_REGION").required().asString(),
+  AWS_BUCKET_NAME: get("AWS_BUCKET_NAME").required().asString(),
 };

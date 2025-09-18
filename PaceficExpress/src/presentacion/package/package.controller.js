@@ -44,11 +44,18 @@ export const assignMessengerController = async (req, res) => {
  */
 export const completeDeliveryController = async (req, res) => {
   try {
+    // 📦 id del paquete desde los params
     const { id } = req.params;
-    const files = req.files; // imágenes subidas con multer
-    const userId = req.user?.id;
-    const updatedPackage = await completeDeliveryService(id, userId,files);
-    return res.status(200).json(updatedPackage);
+    // 👤 userId enviado desde el cliente en el body
+    const { userId } = req.body;
+    // 📸 imágenes subidas con multer (form-data → images[])
+    const files = req.files;
+    // Llamada al servicio
+    const updatedPackage = await completeDeliveryService(id, userId, files);
+    return res.status(200).json({
+      message: "Entrega completada con éxito",
+      data: updatedPackage,
+    });
   } catch (error) {
     console.error("Error en completeDeliveryController:", error);
     return res.status(500).json({
@@ -57,3 +64,5 @@ export const completeDeliveryController = async (req, res) => {
     });
   }
 };
+
+

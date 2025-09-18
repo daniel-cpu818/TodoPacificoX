@@ -1,12 +1,12 @@
 // src/services/package/assignPackageService.js
 import { AppDataSource } from "../../../config/data-source.js";
-import { Package } from "../../models/Package.js";
-import { User } from "../../models/User.js";
+import { Package } from "../../../models/package.entity.js";
+import { User } from "../../../models/user.entity.js";
 
 const packageRepository = AppDataSource.getRepository(Package);
 const userRepository = AppDataSource.getRepository(User);
 
-export const assignPackageService = async (trackingNumber, messengerId) => {
+export const assignPackageService = async (messengerId, trackingNumber) => {
   // Buscar el paquete
   const pkg = await packageRepository.findOne({
     where: { trackingNumber },
