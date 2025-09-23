@@ -25,7 +25,7 @@ export const createPackageController = async (req, res) => {
  */
 export const assignMessengerController = async (req, res) => {
   try {
-    const  id  = req.params;
+    const  {id}  = req.params;
     const { trackingNumber } = req.body; 
 
     const updatedPackage = await assignPackageService(id, trackingNumber);
