@@ -40,7 +40,9 @@ export const completeDeliveryService = async (packageId, userId, files) => {
     where: { id: packageId },
     relations: ["messenger"],
   });
-  if (!pkg) throw new Error("Paquete no encontrado");
+  if (!pkg) throw new Error("Paquete no encontrado pkg");
+  
+  if (pkg.status === "entregado") throw new Error("Paquete Ya ha sido entregado");
 
   // Verificar que el usuario exista y sea mensajero
   const user = await userRepository.findOneBy({ id: userId });

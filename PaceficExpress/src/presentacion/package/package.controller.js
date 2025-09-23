@@ -42,16 +42,24 @@ export const assignMessengerController = async (req, res) => {
 /**
  * Completar entrega y subir imágenes
  */
+// src/controllers/package/completeDelivery.controller.js
 export const completeDeliveryController = async (req, res) => {
   try {
-    // 📦 id del paquete desde los params
-    const { id } = req.params;
-    // 👤 userId enviado desde el cliente en el body
-    const { userId } = req.body;
-    // 📸 imágenes subidas con multer (form-data → images[])
-    const files = req.files;
-    // Llamada al servicio
+    const { id } = req.params;        // 📦 id del paquete en la URL
+    const userId = req.user.id;       // 👤 viene directo del token gracias al middleware
+    const files = req.files;          // 📸 imágenes subidas con multer (form-data → images[])
+
+    // Validar que vengan dos imágenes
+    if (!files || files.length !== 2) {
+      return res.status(400).json({
+        message: "Error al completar la entrega",
+        error: "Debes subir exactamente 2 imágenes como comprobante (form-data → images[])",
+      });
+    }
+
+    // Llamada al servicio con userId del token
     const updatedPackage = await completeDeliveryService(id, userId, files);
+
     return res.status(200).json({
       message: "Entrega completada con éxito",
       data: updatedPackage,
