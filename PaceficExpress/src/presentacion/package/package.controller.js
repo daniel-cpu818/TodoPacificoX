@@ -25,10 +25,10 @@ export const createPackageController = async (req, res) => {
  */
 export const assignMessengerController = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { messengerId } = req.body; // opcional: se puede enviar o usar el user autenticado
+    const  id  = req.params;
+    const { trackingNumber } = req.body; 
 
-    const updatedPackage = await assignPackageService(id, messengerId || req.user?.id);
+    const updatedPackage = await assignPackageService(id, trackingNumber);
     return res.status(200).json(updatedPackage);
   } catch (error) {
     console.error("Error en assignMessengerController:", error);

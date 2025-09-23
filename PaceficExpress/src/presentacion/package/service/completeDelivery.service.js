@@ -28,8 +28,7 @@ function generateFileName(originalName) {
   return `${randomName}.${ext}`;
 }
 
-/**
- * Completar entrega de un paquete con comprobantes (2 imágenes).
+/** 
  * @param {string} packageId - ID del paquete
  * @param {string} userId - ID del mensajero autenticado
  * @param {Array} files - Archivos recibidos de multer

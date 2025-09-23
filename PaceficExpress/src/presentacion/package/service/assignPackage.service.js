@@ -1,4 +1,3 @@
-// src/services/package/assignPackageService.js
 import { AppDataSource } from "../../../config/data-source.js";
 import { Package } from "../../../models/package.entity.js";
 import { User } from "../../../models/user.entity.js";
@@ -10,7 +9,7 @@ export const assignPackageService = async (messengerId, trackingNumber) => {
   // Buscar el paquete
   const pkg = await packageRepository.findOne({
     where: { trackingNumber },
-    relations: ["messenger"], // opcional, si quieres traer el mensajero asignado
+    relations: ["messenger"], 
   });
 
   if (!pkg) throw new Error("Paquete no encontrado");

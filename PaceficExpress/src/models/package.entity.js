@@ -1,4 +1,3 @@
-import e from "express";
 import { EntitySchema } from "typeorm";
 export const Package = new EntitySchema({
   name: "Package",

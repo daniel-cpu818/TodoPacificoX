@@ -11,7 +11,7 @@ export const createPackageService = async ({ trackingNumber, sender, recipient }
   // Validar que sender y recipient tengan los campos requeridos
   const senderFields = ["name", "address", "phone"];
   const recipientFields = ["name", "address", "phone"];
-
+  
   for (const field of senderFields) {
     if (!sender[field]) {
       throw new Error(`Falta el campo obligatorio sender.${field}`);
