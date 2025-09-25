@@ -6,7 +6,7 @@ import { upload } from "./service/completeDelivery.service.js";
 
 const router = Router();
 
-// 📦 Crear un nuevo paquete → solo admin
+// Crear un nuevo paquete → solo admin
 router.post(
   "/",
   authMiddleware,
@@ -14,7 +14,7 @@ router.post(
   createPackageController
 );
 
-// 👷‍♂️ Asignar un mensajero a un paquete → solo admin
+// Asignar un mensajero a un paquete → solo admin
 router.post(
   "/:id/assign",
   authMiddleware,
@@ -22,7 +22,7 @@ router.post(
   assignMessengerController
 );
 
-// 🚚 Completar la entrega con comprobantes → solo mensajero
+// Completar la entrega con comprobantes → solo mensajero
 router.post(
   "/:id/complete",
   authMiddleware,

@@ -1,4 +1,3 @@
-// src/controllers/package.controller.js
 import { createPackageService } from "./service/package-service.create.js";
 import { assignPackageService } from "./service/assignPackage.service.js";
 import { completeDeliveryService } from "./service/completeDelivery.service.js";
@@ -42,12 +41,11 @@ export const assignMessengerController = async (req, res) => {
 /**
  * Completar entrega y subir imágenes
  */
-// src/controllers/package/completeDelivery.controller.js
 export const completeDeliveryController = async (req, res) => {
   try {
-    const { id } = req.params;        // 📦 id del paquete en la URL
-    const userId = req.user.id;       // 👤 viene directo del token gracias al middleware
-    const files = req.files;          // 📸 imágenes subidas con multer (form-data → images[])
+    const { id } = req.params;        
+    const userId = req.user.id;       // viene directo del token
+    const files = req.files;          
 
     // Validar que vengan dos imágenes
     if (!files || files.length !== 2) {
@@ -57,7 +55,6 @@ export const completeDeliveryController = async (req, res) => {
       });
     }
 
-    // Llamada al servicio con userId del token
     const updatedPackage = await completeDeliveryService(id, userId, files);
 
     return res.status(200).json({

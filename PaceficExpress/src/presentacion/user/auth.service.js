@@ -15,7 +15,7 @@ export const registerUser = async ({ name, email, password, role }) => {
     const existingUser = await userRepository.findOne({ where: { email } });
     if (existingUser) {
       const error = new Error("El email ya está registrado");
-      error.statusCode = 409; // Conflict
+      error.statusCode = 409; 
       throw error;
     }
 

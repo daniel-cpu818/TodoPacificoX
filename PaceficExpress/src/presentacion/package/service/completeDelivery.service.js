@@ -1,4 +1,3 @@
-// src/services/package/completeDelivery.service.js
 import { AppDataSource } from "../../../config/data-source.js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "../../../config/envs.js";
@@ -19,7 +18,6 @@ const s3 = new S3Client({
   },
 });
 
-// Configuración de multer para recibir imágenes en memoria
 export const upload = multer({ storage: multer.memoryStorage() });
 
 function generateFileName(originalName) {
@@ -34,7 +32,7 @@ function generateFileName(originalName) {
  * @param {Array} files - Archivos recibidos de multer
  */
 export const completeDeliveryService = async (packageId, userId, files) => {
-  // Verificar que el paquete exista con su relación messenger
+
   const pkg = await packageRepository.findOne({
     where: { id: packageId },
     relations: ["messenger"],
@@ -43,23 +41,19 @@ export const completeDeliveryService = async (packageId, userId, files) => {
   
   if (pkg.status === "entregado") throw new Error("Paquete Ya ha sido entregado");
 
-  // Verificar que el usuario exista y sea mensajero
   const user = await userRepository.findOneBy({ id: userId });
   if (!user || user.role !== "messenger") {
     throw new Error("Usuario no válido o no es mensajero");
   }
 
-  // Validar que el mensajero sea el asignado al paquete
   if (!pkg.messenger || pkg.messenger.id !== user.id) {
     throw new Error("No tienes permiso para completar la entrega de este paquete");
   }
 
-  // Validar que vengan dos imágenes
   if (!files || files.length !== 2) {
     throw new Error("Debes subir exactamente 2 imágenes como comprobante");
   }
 
-  // Subir imágenes a S3
   const imageUrls = [];
   for (const file of files) {
     const fileName = generateFileName(file.originalname);
@@ -75,7 +69,6 @@ export const completeDeliveryService = async (packageId, userId, files) => {
     imageUrls.push(fileUrl);
   }
 
-  // Actualizar paquete
   pkg.proofImage1 = imageUrls[0];
   pkg.proofImage2 = imageUrls[1];
   pkg.status = "entregado";
