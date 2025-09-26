@@ -2,6 +2,10 @@ import { Router } from "express";
 import { createPackageController,completeDeliveryController,assignMessengerController } from "./package.controller.js";
 import { authMiddleware, checkRole } from "../../middlewares/auth.middleware.js";
 import { upload } from "./service/completeDelivery.service.js";
+import {
+  getAllPackagesController,
+  getPackagesByStatusController,
+} from "./package.controller.js";
 
 
 const router = Router();
@@ -30,5 +34,16 @@ router.post(
   upload.array("images", 2), // multer recibe 2 imágenes desde form-data
   completeDeliveryController
 );
+
+// Obtener todos los paquetes
+router.get("/", 
+  authMiddleware, 
+  getAllPackagesController);
+
+// Obtener paquetes por estado
+router.get("/status/:status", 
+  authMiddleware, 
+  getPackagesByStatusController);
+
 
 export default router;

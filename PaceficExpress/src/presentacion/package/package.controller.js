@@ -1,6 +1,8 @@
 import { createPackageService } from "./service/package-service.create.js";
 import { assignPackageService } from "./service/assignPackage.service.js";
 import { completeDeliveryService } from "./service/completeDelivery.service.js";
+import {getAllPackagesService, getPackagesByStatusService} from "./service/package.service.js";
+
 
 /**
  * Crear un nuevo paquete
@@ -70,4 +72,25 @@ export const completeDeliveryController = async (req, res) => {
   }
 };
 
+// Listar todos los paquetes
+export const getAllPackagesController = async (req, res) => {
+  try {
+    const packages = await getAllPackagesService();
+    res.json(packages);
+  } catch (error) {
+    console.error("Error en getAllPackagesController:", error);
+    res.status(500).json({ message: "Error al obtener los paquetes" });
+  }
+};
 
+// Listar paquetes por estado
+export const getPackagesByStatusController = async (req, res) => {
+  try {
+    const { status } = req.params;
+    const packages = await getPackagesByStatusService(status);
+    res.json(packages);
+  } catch (error) {
+    console.error("Error en getPackagesByStatusController:", error);
+    res.status(500).json({ message: "Error al obtener los paquetes por estado" });
+  }
+};
