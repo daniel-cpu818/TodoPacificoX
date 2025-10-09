@@ -13,6 +13,14 @@ export const Package = new EntitySchema({
       unique: true,
       nullable: false,
     },
+    sender: {
+    type: "jsonb",
+    nullable: true,
+    },
+    recipient: {
+      type: "jsonb",
+      nullable: true,
+    },
     status: {
       type: "enum",
       enum: ["pendiente", "asignado", "en_camino", "entregado"],

@@ -5,6 +5,7 @@ import { upload } from "./service/completeDelivery.service.js";
 import {
   getAllPackagesController,
   getPackagesByStatusController,
+  getPackagesByMessengerController
 } from "./package.controller.js";
 
 
@@ -45,5 +46,9 @@ router.get("/status/:status",
   authMiddleware, 
   getPackagesByStatusController);
 
+// Obtener paquetes del mensajero autenticado
+router.get("/assigned", 
+  authMiddleware, 
+  getPackagesByMessengerController);
 
 export default router;
