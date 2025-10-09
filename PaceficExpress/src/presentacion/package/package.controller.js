@@ -11,12 +11,8 @@ export const createPackageController = async (req, res) => {
   try {
     const {
       trackingNumber,
-      status = "pendiente",
       sender,
       recipient,
-      proofImage1 = null,
-      proofImage2 = null,
-      messengerId = null,
     } = req.body;
 
     // Validaciones básicas
@@ -44,12 +40,8 @@ export const createPackageController = async (req, res) => {
     // Crear el paquete con los datos recibidos
     const newPackage = await createPackageService({
       trackingNumber,
-      status,
       sender,
       recipient,
-      proofImage1,
-      proofImage2,
-      messengerId,
     });
 
     return res.status(201).json(newPackage);
