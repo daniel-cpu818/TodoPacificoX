@@ -21,7 +21,7 @@ export const getPackagesByMessengerService = async (messengerId) => {
       where: {
         messenger: { id: messengerId },
       },
-      relations: ["messenger"], // ✅ Solo relaciones reales
+      relations: ["messenger"], 
       order: { createdAt: "DESC" },
     });
 

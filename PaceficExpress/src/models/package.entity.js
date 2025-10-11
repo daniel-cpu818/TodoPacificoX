@@ -23,8 +23,8 @@ export const Package = new EntitySchema({
     },
     status: {
       type: "enum",
-      enum: ["pendiente", "asignado", "en_camino", "entregado"],
-      default: "pendiente",
+      enum: ["asignado_ruta", "en_ruta_bventura", "recibido_bventura", "asignado_reparto", "en_reparto", "entregado"],
+      default: "asignado_ruta",
     },
     proofImage1: {
       type: "varchar",
@@ -32,6 +32,14 @@ export const Package = new EntitySchema({
     },
     proofImage2: {
       type: "varchar",
+      nullable: true,
+    },
+    hasIncident: {
+      type: "boolean",
+      default: false,
+    },
+    incident: {
+      type: "jsonb",
       nullable: true,
     },
     createdAt: {

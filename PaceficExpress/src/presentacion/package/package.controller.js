@@ -1,7 +1,14 @@
 import { createPackageService } from "./service/package-service.create.js";
 import { assignPackageService } from "./service/assignPackage.service.js";
 import { completeDeliveryService } from "./service/completeDelivery.service.js";
-import {getAllPackagesService, getPackagesByStatusService, getPackagesByMessengerService} from "./service/getpackage.service.js";
+import { reportIncidentService } from "./service/reportIncident.service.js";
+import {updatePackageStatusByTrackingService} from "./service/updateStatusService.js";
+import { getUserStatsService } from "./service/getUserStats.service.js";
+import {
+  getAllPackagesService, 
+  getPackagesByStatusService, 
+  getPackagesByMessengerService} 
+from "./service/getpackage.service.js";
 
 
 /**
@@ -59,7 +66,7 @@ export const createPackageController = async (req, res) => {
  */
 export const assignMessengerController = async (req, res) => {
   try {
-    const  {id}  = req.params;
+    const  {id}  = req.user.id; // viene del token
     const { trackingNumber } = req.body; 
 
     const updatedPackage = await assignPackageService(id, trackingNumber);
@@ -79,7 +86,7 @@ export const assignMessengerController = async (req, res) => {
 export const completeDeliveryController = async (req, res) => {
   try {
     const { id } = req.params;        
-    const userId = req.user.id;       // viene directo del token
+    const userId = req.user.id;   // viene directo del token
     const files = req.files;          
 
     // Validar que vengan dos imágenes
@@ -131,11 +138,71 @@ export const getPackagesByStatusController = async (req, res) => {
 // Listar paquetes del mensajero autenticado
 export const getPackagesByMessengerController = async (req, res) => {
   try {
-    const messengerId = req.user.id; // viene del token
+    const messengerId = req.user.id;
     const packages = await getPackagesByMessengerService(messengerId);
     res.json(packages);
   } catch (error) {
     console.error("Error en getPackagesByMessengerController:", error);
     res.status(500).json({ message: "Error al obtener los paquetes del mensajero" });
+  }
+};
+
+//contador de paquetes entregados, escaneados e incidencias
+export const getUserStatsController = async (req, res) => {
+  try {
+    const userId = req.user.id; // viene del token gracias al middleware
+    const stats = await getUserStatsService(userId);
+    res.json(stats);
+  } catch (error) {
+    console.error("Error al obtener estadísticas del usuario:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
+// registrar incidencia en la entrega de un paquete 
+export const reportIncidentController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const incidentData = req.body;
+    const updatedPackage = await reportIncidentService(id, incidentData);
+    return res.status(200).json(updatedPackage);
+  } catch (error) {
+    console.error("Error al registrar el incidente:", error);
+    return res.status(500).json({
+      message: "Error al registrar el incidente",
+      error: error.message,
+    });
+  }
+};
+
+export const departPackageController = async (req, res) => {
+  try {
+    const { trackingNumber } = req.body;
+    const userId = req.user.id; // del token
+    const result = await updatePackageStatusByTrackingService(trackingNumber, "en_ruta_bventura", userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};
+
+export const arrivePackageController = async (req, res) => {
+  try {
+    const { trackingNumber } = req.body;
+    const userId = req.user.id;
+    const result = await updatePackageStatusByTrackingService(trackingNumber, "recibido_bventura", userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};
+
+export const startDeliveryPackageController = async (req, res) => {
+  try {
+    const { trackingNumber } = req.body;
+    const userId = req.user.id;
+    const result = await updatePackageStatusByTrackingService(trackingNumber, "en_reparto", userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
   }
 };

@@ -42,3 +42,14 @@ export const getMyPackages = async (req, res) => {
   const packs = await getMyPackagesService(req.user.id);
   res.json(packs);
 };
+
+export const getUserStatsController = async (req, res) => {
+  try {
+    const userId = req.user.id; // viene del token gracias al middleware
+    const stats = await getUserStatsService(userId);
+    res.json(stats);
+  } catch (error) {
+    console.error("Error al obtener estadísticas del usuario:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+};

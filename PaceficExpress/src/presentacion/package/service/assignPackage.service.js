@@ -22,7 +22,8 @@ export const assignPackageService = async (messengerId, trackingNumber) => {
 
   // Asignar el mensajero y actualizar el estado
   pkg.messenger = messenger;
-  pkg.status = "asignado";
+  pkg.status = "asignado_reparto";
+  pkg.updatedAt = new Date();
 
   await packageRepository.save(pkg);
   return pkg;

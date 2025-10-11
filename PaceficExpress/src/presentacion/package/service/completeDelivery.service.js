@@ -46,6 +46,13 @@ export const completeDeliveryService = async (packageId, userId, files) => {
     throw new Error("Usuario no válido o no es mensajero");
   }
 
+  console.log("DEBUG permisos =>", {
+  pkgMessengerId: pkg.messenger?.id,
+  trackingNumber: pkg.trackingNumber,
+  userId: user.id,
+  pkgMessengerObj: pkg.messenger,
+  });
+
   if (!pkg.messenger || pkg.messenger.id !== user.id) {
     throw new Error("No tienes permiso para completar la entrega de este paquete");
   }
@@ -72,6 +79,9 @@ export const completeDeliveryService = async (packageId, userId, files) => {
   pkg.proofImage1 = imageUrls[0];
   pkg.proofImage2 = imageUrls[1];
   pkg.status = "entregado";
+  pkg.updatedAt = new Date();
+  pkg.hasIncident = false;
+  pkg.incident = null;
 
   await packageRepository.save(pkg);
 

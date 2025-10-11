@@ -1,11 +1,18 @@
 import { Router } from "express";
-import { createPackageController,completeDeliveryController,assignMessengerController } from "./package.controller.js";
 import { authMiddleware, checkRole } from "../../middlewares/auth.middleware.js";
 import { upload } from "./service/completeDelivery.service.js";
 import {
   getAllPackagesController,
   getPackagesByStatusController,
-  getPackagesByMessengerController
+  getPackagesByMessengerController,
+  createPackageController,
+  completeDeliveryController,
+  assignMessengerController,
+  getUserStatsController,
+  reportIncidentController,
+  departPackageController,
+  arrivePackageController,
+  startDeliveryPackageController
 } from "./package.controller.js";
 
 
@@ -19,11 +26,11 @@ router.post(
   createPackageController
 );
 
-// Asignar un mensajero a un paquete → solo admin
+// Asignar un mensajero a un paquete 
 router.post(
-  "/:id/assign",
+  "/assign",
   authMiddleware,
-  checkRole(["admin"]),
+  checkRole(["messenger"]),
   assignMessengerController
 );
 
@@ -50,5 +57,30 @@ router.get("/status/:status",
 router.get("/assigned", 
   authMiddleware, 
   getPackagesByMessengerController);
+
+// contador de paquetes entregados, escaneados e incidencias
+router.get("/user/stats", 
+  authMiddleware,
+  getUserStatsController);
+
+// Reportar una incidencia en un paquete
+router.post("/packages/:id/incident", 
+  reportIncidentController);
+
+// cambiar estado del paquete a "en_ruta_bventura"
+router.post("/packages/depart", 
+  authMiddleware,
+  departPackageController);
+
+// cambiar estado del paquete a "asignado_reparto"
+router.post("/packages/arrive", 
+  authMiddleware,
+  arrivePackageController);
+
+// cambiar estado del paquete a "en_reparto"
+router.post("/packages/start-delivery", 
+  authMiddleware,
+  startDeliveryPackageController);
+
 
 export default router;
