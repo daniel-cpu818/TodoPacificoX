@@ -12,7 +12,8 @@ import {
   reportIncidentController,
   departPackageController,
   arrivePackageController,
-  startDeliveryPackageController
+  startDeliveryPackageController,
+  getPackageByTrackingNumberController
 } from "./package.controller.js";
 
 
@@ -57,6 +58,10 @@ router.get("/status/:status",
 router.get("/assigned", 
   authMiddleware, 
   getPackagesByMessengerController);
+// Obtener paquete por su tracking number
+router.get("/tracking/:trackingNumber", 
+  authMiddleware, 
+  getPackageByTrackingNumberController);  
 
 // contador de paquetes entregados, escaneados e incidencias
 router.get("/user/stats", 

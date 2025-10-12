@@ -13,6 +13,13 @@ export const getPackagesByStatusService = async (status) => {
   return await packageRepository.find({ where: { status } });
 };
 
+// obtener paquete por su tracking number
+export const getPackageByTrackingNumberService = async (trackingNumber) => {
+  const pkg = await packageRepository.findOne({ where: { trackingNumber } });
+  if (!pkg) throw new Error("Paquete no encontrado");
+  return pkg;
+};
+
 // Obtener paquetes del mensajero autenticado
 
 export const getPackagesByMessengerService = async (messengerId) => {

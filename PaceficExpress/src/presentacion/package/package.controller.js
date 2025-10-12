@@ -7,7 +7,8 @@ import { getUserStatsService } from "./service/getUserStats.service.js";
 import {
   getAllPackagesService, 
   getPackagesByStatusService, 
-  getPackagesByMessengerService} 
+  getPackagesByMessengerService,
+  getPackageByTrackingNumberService} 
 from "./service/getpackage.service.js";
 
 
@@ -144,6 +145,18 @@ export const getPackagesByMessengerController = async (req, res) => {
   }
 };
 
+// listar paquete por su tracking number
+export const getPackageByTrackingNumberController = async (req, res) => {
+  try {
+    const { trackingNumber } = req.params;
+    const pkg = await getPackageByTrackingNumberService(trackingNumber);
+    res.json(pkg);
+  } catch (error) {
+    console.error("Error en getPackageByTrackingNumberController:", error);
+    res.status(500).json({ message: "Error al obtener el paquete por su tracking number" });
+  }
+};
+
 //contador de paquetes entregados, escaneados e incidencias
 export const getUserStatsController = async (req, res) => {
   try {
@@ -155,6 +168,7 @@ export const getUserStatsController = async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   }
 };
+
 // registrar incidencia en la entrega de un paquete 
 export const reportIncidentController = async (req, res) => {
   try {
