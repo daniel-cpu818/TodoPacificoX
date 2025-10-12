@@ -7,7 +7,7 @@ import {
   getPackagesByMessengerController,
   createPackageController,
   completeDeliveryController,
-  assignMessengerController,
+  assignPackageController,
   getUserStatsController,
   reportIncidentController,
   departPackageController,
@@ -31,7 +31,7 @@ router.post(
   "/assign",
   authMiddleware,
   checkRole(["messenger"]),
-  assignMessengerController
+  assignPackageController
 );
 
 // Completar la entrega con comprobantes → solo mensajero

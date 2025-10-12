@@ -64,19 +64,16 @@ export const createPackageController = async (req, res) => {
 /**
  * Asignar un mensajero a un paquete
  */
-export const assignMessengerController = async (req, res) => {
+export const assignPackageController = async (req, res) => {
   try {
-    const  {id}  = req.user.id; // viene del token
-    const { trackingNumber } = req.body; 
+    const { trackingNumber } = req.body;
+    const userId = req.user.id; // <- tomado del token (middleware de auth)
 
-    const updatedPackage = await assignPackageService(id, trackingNumber);
-    return res.status(200).json(updatedPackage);
+    const result = await assignPackageService(userId, trackingNumber);
+
+    res.status(200).json(result);
   } catch (error) {
-    console.error("Error en assignMessengerController:", error);
-    return res.status(500).json({
-      message: "Error al asignar el mensajero",
-      error: error.message,
-    });
+    res.status(400).json({ message: error.message });
   }
 };
 
