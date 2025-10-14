@@ -4,6 +4,7 @@ import { completeDeliveryService } from "./service/completeDelivery.service.js";
 import { reportIncidentService } from "./service/reportIncident.service.js";
 import {updatePackageStatusByTrackingService} from "./service/updateStatusService.js";
 import { getUserStatsService } from "./service/getUserStats.service.js";
+import {getUserHistoryService} from "./service/getUserHistoryService.js";
 import {
   getAllPackagesService, 
   getPackagesByStatusService, 
@@ -215,5 +216,24 @@ export const startDeliveryPackageController = async (req, res) => {
     return res.status(200).json(result);
   } catch (error) {
     return res.status(400).json({ message: error.message });
+  }
+};
+
+export const getUserHistoryController = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const packages = await getUserHistoryService(userId);
+
+    return res.status(200).json({
+      total: packages.length,
+      packages,
+    });
+  } catch (error) {
+    console.error("Error en getUserHistoryController:", error);
+    return res.status(500).json({
+      message: "Error al obtener el historial del usuario",
+      error: error.message,
+    });
   }
 };

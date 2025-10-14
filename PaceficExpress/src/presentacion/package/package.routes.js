@@ -13,7 +13,8 @@ import {
   departPackageController,
   arrivePackageController,
   startDeliveryPackageController,
-  getPackageByTrackingNumberController
+  getPackageByTrackingNumberController,
+  getUserHistoryController
 } from "./package.controller.js";
 
 
@@ -69,7 +70,8 @@ router.get("/user/stats",
   getUserStatsController);
 
 // Reportar una incidencia en un paquete
-router.post("/packages/:id/incident", 
+router.post("/packages/:id/incident",
+  authMiddleware, 
   reportIncidentController);
 
 // cambiar estado del paquete a "en_ruta_bventura"
@@ -87,5 +89,9 @@ router.post("/packages/start-delivery",
   authMiddleware,
   startDeliveryPackageController);
 
+// Historial completo de paquetes de un mensajero (activos y completados)
+router.get("/user/history", 
+  authMiddleware,
+  getUserHistoryController);
 
 export default router;
