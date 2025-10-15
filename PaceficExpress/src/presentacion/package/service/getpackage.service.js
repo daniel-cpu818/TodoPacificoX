@@ -27,6 +27,7 @@ export const getPackagesByMessengerService = async (messengerId) => {
     const packages = await packageRepository.find({
       where: {
         messenger: { id: messengerId },
+         status: Not("entregado"),
       },
       relations: ["messenger"], 
       order: { createdAt: "DESC" },
