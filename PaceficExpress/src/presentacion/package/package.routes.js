@@ -14,7 +14,8 @@ import {
   arrivePackageController,
   startDeliveryPackageController,
   getPackageByTrackingNumberController,
-  getUserHistoryController
+  getUserHistoryController,
+  getPackageHistoryController
 } from "./package.controller.js";
 
 
@@ -93,5 +94,8 @@ router.post("/packages/start-delivery",
 router.get("/user/history", 
   authMiddleware,
   getUserHistoryController);
-
+  
+router.get("/packages/:trackingNumber/history",
+  authMiddleware, 
+  getPackageHistoryController);
 export default router;

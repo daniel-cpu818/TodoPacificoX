@@ -23,8 +23,8 @@ export const Package = new EntitySchema({
     },
     status: {
       type: "enum",
-      enum: ["asignado_ruta", "en_ruta_bventura", "recibido_bventura", "asignado_reparto", "en_reparto", "entregado"],
-      default: "asignado_ruta",
+      enum: ["pendiente", "en_ruta_bventura", "recibido_bventura", "asignado_reparto", "en_reparto", "entregado"],
+      default: "pendiente",
     },
     proofImage1: {
       type: "varchar",
@@ -58,6 +58,11 @@ export const Package = new EntitySchema({
       joinColumn: true,
       nullable: true,
     },
+   history: {
+  type: "one-to-many",
+  target: "PackageHistory",
+  inverseSide: "package",
+  cascade: true,},
   },
 });
 export default Package;

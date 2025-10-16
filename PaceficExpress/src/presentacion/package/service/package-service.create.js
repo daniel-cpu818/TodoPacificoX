@@ -9,14 +9,14 @@ export const createPackageService = async ({ trackingNumber, sender, recipient }
     throw new Error("Faltan datos obligatorios: trackingNumber, sender y recipient");
   }
 
-  const senderFields = ["name", "address", "phone"];
+  const senderFields = ["name", "address", "city", "phone"];
   for (const field of senderFields) {
     if (!sender[field]) {
       throw new Error(`Falta el campo obligatorio sender.${field}`);
     }
   }
 
-  const recipientFields = ["name", "address", "phone"];
+  const recipientFields = ["name", "address", "city",  "phone"];
   for (const field of recipientFields) {
     if (!recipient[field]) {
       throw new Error(`Falta el campo obligatorio recipient.${field}`);
@@ -32,7 +32,8 @@ export const createPackageService = async ({ trackingNumber, sender, recipient }
     trackingNumber,
     sender,
     recipient,
-    status: "asignado_ruta",
+    status: "pendiente",
+    createdAt: new Date(),
     proofImage1: null,
     proofImage2: null,
   });
@@ -42,7 +43,6 @@ export const createPackageService = async ({ trackingNumber, sender, recipient }
   return {
     id: savedPackage.id,
     trackingNumber: savedPackage.trackingNumber,
-    status: savedPackage.status,
     sender: savedPackage.sender,
     recipient: savedPackage.recipient,
     proofImage1: savedPackage.proofImage1,

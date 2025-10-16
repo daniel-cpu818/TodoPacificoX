@@ -3,6 +3,7 @@ import { DataSource } from "typeorm";
 import { env } from "./envs.js";
 import User from "../models/user.entity.js";
 import Package from "../models/package.entity.js";
+import history from "../models/packageHistory.entity.js";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -11,8 +12,8 @@ export const AppDataSource = new DataSource({
   username: env.DB_USERNAME,
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
-  synchronize: false,
+  synchronize: true,
   logging: false,
   ssl: { rejectUnauthorized: false },
-  entities: [User, Package],
+  entities: [User, Package, history],
 });

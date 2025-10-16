@@ -1,5 +1,7 @@
 import { AppDataSource } from "../../../config/data-source.js";
 import { Package } from "../../../models/package.entity.js";
+import { Not } from "typeorm";
+
 
 const packageRepository = AppDataSource.getRepository(Package);
 

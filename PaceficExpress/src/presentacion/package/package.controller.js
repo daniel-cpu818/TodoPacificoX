@@ -11,6 +11,9 @@ import {
   getPackagesByMessengerService,
   getPackageByTrackingNumberService} 
 from "./service/getpackage.service.js";
+import { AppDataSource } from "../../config/data-source.js";
+import { Package } from "../../models/package.entity.js";
+const packageRepository = AppDataSource.getRepository(Package);
 
 
 /**
@@ -191,7 +194,11 @@ export const departPackageController = async (req, res) => {
     const { trackingNumber } = req.body;
     const userId = req.user.id; // del token
     const result = await updatePackageStatusByTrackingService(trackingNumber, "en_ruta_bventura", userId);
-    return res.status(200).json(result);
+     return res.status(200).json({
+      message: result.message,
+      package: result.package,
+      history: result.history,
+    });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -202,7 +209,11 @@ export const arrivePackageController = async (req, res) => {
     const { trackingNumber } = req.body;
     const userId = req.user.id;
     const result = await updatePackageStatusByTrackingService(trackingNumber, "recibido_bventura", userId);
-    return res.status(200).json(result);
+    return res.status(200).json({
+      message: result.message,
+      package: result.package,
+      history: result.history,
+    });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -213,7 +224,12 @@ export const startDeliveryPackageController = async (req, res) => {
     const { trackingNumber } = req.body;
     const userId = req.user.id;
     const result = await updatePackageStatusByTrackingService(trackingNumber, "en_reparto", userId);
-    return res.status(200).json(result);
+   
+     return res.status(200).json({
+      message: result.message,
+      package: result.package,
+      history: result.history,
+    });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -235,5 +251,32 @@ export const getUserHistoryController = async (req, res) => {
       message: "Error al obtener el historial del usuario",
       error: error.message,
     });
+  }
+};
+
+export const getPackageHistoryController = async (req, res) => {
+  try {
+    const { trackingNumber } = req.params;
+
+    const pkg = await packageRepository.findOne({
+      where: { trackingNumber },
+      relations: ["history", "history.user"],
+      order: { history: { changedAt: "ASC" } },
+    });
+
+    if (!pkg) return res.status(404).json({ message: "Paquete no encontrado" });
+
+    res.json({
+      trackingNumber: pkg.trackingNumber,
+      history: pkg.history.map((h) => ({
+        previousStatus: h.previousStatus,
+        newStatus: h.newStatus,
+        note: h.note,
+        changedBy: h.user ? h.user.name : "Sistema",
+        changedAt: h.changedAt,
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

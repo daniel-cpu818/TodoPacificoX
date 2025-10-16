@@ -1,36 +1,53 @@
 import { AppDataSource } from "../../../config/data-source.js";
 import { Package } from "../../../models/package.entity.js";
+import { PackageHistory } from "../../../models/packageHistory.entity.js";
+import { User } from "../../../models/user.entity.js";
 
 const packageRepository = AppDataSource.getRepository(Package);
-/**
- * Actualiza el estado de un paquete por su trackingNumber y agrega el cambio al historial.
- */
-export const updatePackageStatusByTrackingService = async (trackingNumber, newStatus, userId) => {
-  const packageFound = await packageRepository.findOne({
+const historyRepository = AppDataSource.getRepository(PackageHistory);
+const userRepository = AppDataSource.getRepository(User);
+
+export const updatePackageStatusByTrackingService = async (trackingNumber, newStatus, userId, note = null) => {
+  // Buscar el paquete
+  const pkg = await packageRepository.findOne({
     where: { trackingNumber },
     relations: ["messenger"],
   });
 
-  if (!packageFound) {
+  if (!pkg) {
     throw new Error(`No se encontró un paquete con trackingNumber ${trackingNumber}`);
   }
 
-  // Crear un registro del cambio
-  const historyEntry = {
-    status: newStatus,
-    changedBy: userId || (packageFound.messenger ? packageFound.messenger.id : null),
-    timestamp: new Date().toISOString(),
-  };
+  const previousStatus = pkg.status;
 
-  // Agregar al historial
-  packageFound.statusHistory = [...(packageFound.statusHistory || []), historyEntry];
-  packageFound.status = newStatus;
-  packageFound.updatedAt = new Date();
+  // Validar si el estado realmente cambió
+  if (previousStatus === newStatus) {
+    throw new Error(`El paquete ya se encuentra en el estado '${newStatus}'`);
+  }
 
-  await packageRepository.save(packageFound);
+  // Actualizar el estado principal
+  pkg.status = newStatus;
+  pkg.updatedAt = new Date();
+
+  // Determinar quién hizo el cambio
+  const user = userId ? await userRepository.findOne({ where: { id: userId } }) : null;
+
+  // Crear un nuevo registro en el historial
+  const historyEntry = historyRepository.create({
+    package: pkg,
+    user: user || pkg.messenger || null,
+    previousStatus,
+    newStatus,
+    note: note || `Cambio automático a estado: ${newStatus}`,
+  });
+
+  // Guardar ambos en la base de datos
+  await packageRepository.save(pkg);
+  await historyRepository.save(historyEntry);
 
   return {
-    message: `Estado del paquete ${trackingNumber} actualizado a '${newStatus}'`,
-    package: packageFound,
+    message: `Estado del paquete ${trackingNumber} actualizado de '${previousStatus}' a '${newStatus}'`,
+    package: pkg,
+    history: historyEntry,
   };
 };
