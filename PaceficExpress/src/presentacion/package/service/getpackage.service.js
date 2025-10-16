@@ -12,7 +12,7 @@ export const getAllPackagesService = async () => {
 
 // Obtener paquetes por estado (pendiente, asignado, entregado)
 export const getPackagesByStatusService = async (status) => {
-  return await packageRepository.find({ where: { status } });
+  return await packageRepository.find({ where: { status }, order: { createdAt: "ASC" } });
 };
 
 // obtener paquete por su tracking number
@@ -32,7 +32,7 @@ export const getPackagesByMessengerService = async (messengerId) => {
          status: Not("entregado"),
       },
       relations: ["messenger"], 
-      order: { createdAt: "DESC" },
+      order: { createdAt: "ASC" },
     });
 
     return packages;
