@@ -15,7 +15,9 @@ import {
   startDeliveryPackageController,
   getPackageByTrackingNumberController,
   getUserHistoryController,
-  getPackageHistoryController
+  getPackageHistoryController,
+  assignAdminPackageController,
+  updatePackageController
 } from "./package.controller.js";
 
 
@@ -94,8 +96,25 @@ router.post("/packages/start-delivery",
 router.get("/user/history", 
   authMiddleware,
   getUserHistoryController);
-  
+
+// Historial de un paquete por su tracking number
 router.get("/packages/:trackingNumber/history",
   authMiddleware, 
   getPackageHistoryController);
+
+// Asignar paquete por admin
+router.post(
+  "/:id/assign",
+ //authMiddleware,
+  //checkRole(["admin"]),
+  assignAdminPackageController
+);
+
+// Actualizar información del paquete
+router.put(
+  "/:id",
+ // authMiddleware,
+ // checkRole(["admin"]),
+  updatePackageController
+);
 export default router;

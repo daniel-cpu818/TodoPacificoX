@@ -29,6 +29,10 @@ export const User = new EntitySchema({
       enum: ["admin", "messenger"],
       default: "messenger",
     },
+    isActive: {
+      type: "boolean",
+      default: true,
+    },
     createdAt: {
       type: "timestamp",
       createDate: true,

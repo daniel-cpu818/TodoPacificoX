@@ -5,6 +5,8 @@ import { reportIncidentService } from "./service/reportIncident.service.js";
 import {updatePackageStatusByTrackingService} from "./service/updateStatusService.js";
 import { getUserStatsService } from "./service/getUserStats.service.js";
 import {getUserHistoryService} from "./service/getUserHistoryService.js";
+import {assignAdminPackageService} from "./service/assignPackageAdmin.service.js";
+import { updatePackageService } from "./service/updatePackage.service.js";
 import {
   getAllPackagesService, 
   getPackagesByStatusService, 
@@ -280,3 +282,36 @@ export const getPackageHistoryController = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const assignAdminPackageController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { messengerId } = req.body;
+    const updatedPackage = await assignAdminPackageService(id, messengerId);
+    res.status(200).json(updatedPackage);
+  } catch (error) {
+    console.error("Error en assignPackageController:", error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+
+export const updatePackageController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    console.log("✏️ Actualizando paquete:", id, "con datos:", updateData);
+
+    const updatedPackage = await updatePackageService(id, updateData);
+
+    res.status(200).json({
+      message: "Paquete actualizado correctamente",
+      package: updatedPackage,
+    });
+  } catch (error) {
+    console.error("Error en updatePackageController:", error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
