@@ -17,7 +17,10 @@ import {
   getUserHistoryController,
   getPackageHistoryController,
   assignAdminPackageController,
-  updatePackageController
+  updatePackageController,
+  deletePackageController,
+  unassignPackageController,
+  generateMessengerReportController
 } from "./package.controller.js";
 
 
@@ -105,16 +108,40 @@ router.get("/packages/:trackingNumber/history",
 // Asignar paquete por admin
 router.post(
   "/:id/assign",
- //authMiddleware,
-  //checkRole(["admin"]),
+  authMiddleware,
+  checkRole(["admin"]),
   assignAdminPackageController
 );
 
 // Actualizar información del paquete
 router.put(
   "/:id",
- // authMiddleware,
- // checkRole(["admin"]),
+  authMiddleware,
+  checkRole(["admin"]),
   updatePackageController
 );
+// Eliminar un paquete
+router.delete(
+  "/:id",
+  authMiddleware,
+  checkRole(["admin"]),
+  deletePackageController
+);
+
+// Desasignar un mensajero de un paquete
+ router.post(
+  "/:id/unassign",
+   authMiddleware,
+   checkRole(["admin"]),
+  unassignPackageController
+);
+
+// reporte de paquetes entregados por mensajero en un rango de fechas
+ router.get(
+   "/report/messenger",
+   authMiddleware,
+   checkRole(["admin"]),
+   generateMessengerReportController
+ );
+
 export default router;

@@ -7,6 +7,9 @@ import { getUserStatsService } from "./service/getUserStats.service.js";
 import {getUserHistoryService} from "./service/getUserHistoryService.js";
 import {assignAdminPackageService} from "./service/assignPackageAdmin.service.js";
 import { updatePackageService } from "./service/updatePackage.service.js";
+import {deletePackageService} from "./service/deletePackage.service.js";
+import { unassignPackageService } from "./service/unassignPackage.service.js";
+import { generateMessengerReportService } from "./service/packageReport.service.js";
 import {
   getAllPackagesService, 
   getPackagesByStatusService, 
@@ -15,6 +18,9 @@ import {
 from "./service/getpackage.service.js";
 import { AppDataSource } from "../../config/data-source.js";
 import { Package } from "../../models/package.entity.js";
+import path from "path";
+import fs from "fs";
+
 const packageRepository = AppDataSource.getRepository(Package);
 
 
@@ -315,3 +321,54 @@ export const updatePackageController = async (req, res) => {
   }
 };
 
+
+export const deletePackageController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log("Eliminando paquete con ID:", id);
+
+    const result = await deletePackageService(id);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error en deletePackageController:", error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const unassignPackageController = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await unassignPackageService(id);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error en unassignPackageController:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const generateMessengerReportController = async (req, res) => {
+  try {
+    const { messengerId, startDate, endDate } = req.body;
+    const report = await generateMessengerReportService(messengerId, startDate, endDate);
+
+    const filePath = path.resolve(report.filePath);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "Archivo de reporte no encontrado" });
+    }
+
+    // 🔽 Envía el archivo directamente al cliente
+    res.download(filePath, `reporte_${messengerId}.xlsx`, (err) => {
+      if (err) {
+        console.error("Error al descargar el archivo:", err);
+        res.status(500).json({ message: "Error al descargar el archivo" });
+      }
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
