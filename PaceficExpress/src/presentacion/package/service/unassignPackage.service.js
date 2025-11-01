@@ -1,11 +1,9 @@
 import { AppDataSource } from "../../../config/data-source.js";
 import { Package } from "../../../models/package.entity.js";
-import { User } from "../../../models/user.entity.js";
 
 const packageRepository = AppDataSource.getRepository(Package);
-const userRepository = AppDataSource.getRepository(User);
 
-export const unassignPackageService = async (packageId, adminId = null) => {
+export const unassignPackageService = async (packageId) => {
   try {
     // Buscar el paquete
     const pkg = await packageRepository.findOne({
@@ -23,7 +21,7 @@ export const unassignPackageService = async (packageId, adminId = null) => {
 
     // Desasignar el mensajero
     pkg.messenger = null;
-    pkg.status = "pendiente";
+    pkg.status = "recibido_bventura";
     pkg.updatedAt = new Date();
 
     // Guardar cambios
