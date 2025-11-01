@@ -41,3 +41,21 @@ export const getPackagesByMessengerService = async (messengerId) => {
     throw new Error("Error al obtener los paquetes del mensajero");
   }
 };
+
+// Obtener paquetes asignados a un mensajero específico
+export const getPackagesBySpecificMessengerService = async (messengerId) => {
+try {
+    const packages = await packageRepository.find({
+      where: {
+        messenger: { id: messengerId },
+         status: ("asignado_reparto" || "en_reparto"),
+      },
+      relations: ["messenger"], 
+      order: { createdAt: "ASC" },
+    });
+    return packages;
+  } catch (error) {
+    console.error("Error al obtener paquetes del mensajero específico:", error);
+    throw new Error("Error al obtener los paquetes del mensajero específico");
+  }
+};

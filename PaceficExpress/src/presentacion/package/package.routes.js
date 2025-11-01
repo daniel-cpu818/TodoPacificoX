@@ -20,7 +20,8 @@ import {
   updatePackageController,
   deletePackageController,
   unassignPackageController,
-  generateMessengerReportController
+  generateMessengerReportController,
+  getPackagesBySpecificMessengerController
 } from "./package.controller.js";
 
 
@@ -143,5 +144,13 @@ router.delete(
    checkRole(["admin"]),
    generateMessengerReportController
  );
+
+// listar paquetes por mensajero específico
+  router.get(
+    "/messenger/:messengerId",
+    authMiddleware,
+    checkRole(["admin"]),
+    getPackagesBySpecificMessengerController
+  );
 
 export default router;

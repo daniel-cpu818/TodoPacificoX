@@ -14,7 +14,8 @@ import {
   getAllPackagesService, 
   getPackagesByStatusService, 
   getPackagesByMessengerService,
-  getPackageByTrackingNumberService} 
+  getPackageByTrackingNumberService,
+  getPackagesBySpecificMessengerService} 
 from "./service/getpackage.service.js";
 import { AppDataSource } from "../../config/data-source.js";
 import { Package } from "../../models/package.entity.js";
@@ -370,5 +371,17 @@ export const generateMessengerReportController = async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+// Listar paquetes asignados a un mensajero específico
+export const getPackagesBySpecificMessengerController = async (req, res) => {
+  try {
+    const { messengerId } = req.params;
+    const packages = await getPackagesBySpecificMessengerService(messengerId);
+    res.json(packages);
+  } catch (error) {
+    console.error("Error en getPackagesBySpecificMessengerController:", error);
+    res.status(500).json({ message: "Error al obtener los paquetes del mensajero específico" });
   }
 };
