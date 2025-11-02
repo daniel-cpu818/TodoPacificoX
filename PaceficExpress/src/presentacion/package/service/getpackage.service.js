@@ -48,7 +48,7 @@ try {
     const packages = await packageRepository.find({
       where: {
         messenger: { id: messengerId },
-         status: ("asignado_reparto" || "en_reparto"),
+          status: Not("entregado"),
       },
       relations: ["messenger"], 
       order: { createdAt: "ASC" },
