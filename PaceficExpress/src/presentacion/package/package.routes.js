@@ -102,7 +102,6 @@ router.get("/user/history",
 
 // Historial de un paquete por su tracking number
 router.get("/packages/:trackingNumber/history",
-  authMiddleware, 
   getPackageHistoryController);
 
 // Asignar paquete por admin
