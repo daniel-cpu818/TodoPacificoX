@@ -68,7 +68,6 @@ router.get("/assigned",
   getPackagesByMessengerController);
 // Obtener paquete por su tracking number
 router.get("/tracking/:trackingNumber", 
-  authMiddleware, 
   getPackageByTrackingNumberController);  
 
 // contador de paquetes entregados, escaneados e incidencias

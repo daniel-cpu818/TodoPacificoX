@@ -25,7 +25,31 @@ export const updatePackageStatusByTrackingService = async (trackingNumber, newSt
     throw new Error(`El paquete ya se encuentra en el estado '${newStatus}'`);
   }
 
-  // Actualizar el estado principal
+  // 🔒 Definimos el orden lógico de estados permitidos
+  const statusOrder = [
+    "pendiente",
+    "en_ruta_bventura",
+    "recibido_bventura",
+    "asignado_reparto",
+    "en_reparto",
+    "entregado",
+  ];
+
+  const prevIndex = statusOrder.indexOf(previousStatus);
+  const newIndex = statusOrder.indexOf(newStatus);
+
+  if (newIndex === -1) {
+    throw new Error(`El estado '${newStatus}' no es válido`);
+  }
+
+  // ❌ Si intenta retroceder a un estado anterior, se bloquea
+  if (newIndex < prevIndex) {
+    throw new Error(
+      `No se puede retroceder el estado del paquete. Estado actual: '${previousStatus}', nuevo estado: '${newStatus}'`
+    );
+  }
+
+  // ✅ Si pasa la validación, actualizar el estado
   pkg.status = newStatus;
   pkg.updatedAt = new Date();
 
